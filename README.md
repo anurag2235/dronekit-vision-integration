@@ -13,4 +13,4 @@ open three linux terminals.<br/>
 This will run a dronekit script, in the script you can use centroid coordinates whereever is needed by calling eye function eye().<br/>
 eye() is defined in classify.py,classifyimage.py and classify-video.py.<br/>
 eye() will only print centroid coordinates, to change use return in the vision scripts.<br/>
-Import any one of them as required.<br/>
+Import any one of the vision scripts as required.<br/>
