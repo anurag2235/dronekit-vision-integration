@@ -1,0 +1,16 @@
+sudo apt-get update && sudo apt-get upgrade
+
+Packages to Install:
+ pip install dronekit dronekit-sitl mavproxy
+
+Open First Terminal:
+ dronekit-sitl copter --home=28.3678576,77.3168729,0,270 
+Open Second Terminal:
+mavproxy.py --master tcp:127.0.0.1:5760 --sitl 127.0.0.1:5501 --out 127.0.0.1:14550 --out 127.0.0.1:14551 --out 127.0.0.1:14552
+
+(The GPS coordinates here are different , it doesn't matter. Pick your favorite location :) 
+ 
+Open Third Terminal:
+  1.   change the directory by using command : cd /mnt/ ( path of folder)
+
+ 2.    sudo python simple.py --connect udp:127.0.0.1:14550
