@@ -28,16 +28,15 @@ signal.signal(signal.SIGINT, sigint_handler)
 
 
 
-model = "un86.eim"
+model = "86.eim"
 dir_path = os.path.dirname(os.path.realpath(__file__))
 modelfile = os.path.join(dir_path, model)
-def eye():
- with ImageImpulseRunner(modelfile) as runner:
+with ImageImpulseRunner(modelfile) as runner:
         try:
             model_info = runner.init()
             print('Loaded runner for "' + model_info['project']['owner'] + ' / ' + model_info['project']['name'] + '"')
             labels = model_info['model_parameters']['labels']
-            videoCaptureDeviceId = int(0)      #if not automatically detect add id here inside bracket...,
+            videoCaptureDeviceId = int(2)      #if not automatically detect add id here inside bracket...,
             camera = cv2.VideoCapture(videoCaptureDeviceId)
             ret = camera.read()[0]
             if ret:
@@ -56,32 +55,30 @@ def eye():
                     time.sleep((next_frame - now()) / 1000)
 
                 # print('classification runner response', res)
-
-                if "classification" in res["result"].keys():
+                def eye():
+                 if "classification" in res["result"].keys():
                     print('Result (%d ms.) ' % (res['timing']['dsp'] + res['timing']['classification']), end='')
                     for label in labels:
                         score = res['result']['classification'][label]
                         print('%s: %.2f\t' % (label, score), end='')
                     print('', flush=True)
 
-                elif "bounding_boxes" in res["result"].keys():
+                 elif "bounding_boxes" in res["result"].keys():
                     print('Found %d bounding boxes (%d ms.)' % (len(res["result"]["bounding_boxes"]), res['timing']['dsp'] + res['timing']['classification']))
                     for bb in res["result"]["bounding_boxes"]:
                         print('\t%s (%.2f): centroid x=%d y=%d ' % (bb['label'], bb['value'], bb['x'], bb['y']))
                         img = cv2.rectangle(img, (bb['x'], bb['y']), (bb['x'] + bb['width'], bb['y'] + bb['height']), (255, 0, 0), 1)
 
-                if (show_camera):
+                 if (show_camera):
                     cv2.imshow('edgeimpulse', cv2.cvtColor(img, cv2.COLOR_RGB2BGR))
-                    if cv2.waitKey(1) == ord('q'):
-                        break
-                c= len(res["result"]["bounding_boxes"])      
-                if(c==1):   
+                 c= len(res["result"]["bounding_boxes"])      
+                 if(c==1):   
                   return (bb['x'],bb['y'],len(res["result"]["bounding_boxes"]))
-                else :
-                  return (0,0,len(res["result"]["bounding_boxes"]))    
+                 else :
+                  return (0,0,len(res["result"]["bounding_boxes"]))   
 
-                next_frame = now()+1   # you can control speed here....
         finally:
             if (runner):
-                runner.stop()
-        
+                runner.stop()  
+
+
