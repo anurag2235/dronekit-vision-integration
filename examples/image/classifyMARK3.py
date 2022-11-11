@@ -36,7 +36,7 @@ with ImageImpulseRunner(modelfile) as runner:
             model_info = runner.init()
             print('Loaded runner for "' + model_info['project']['owner'] + ' / ' + model_info['project']['name'] + '"')
             labels = model_info['model_parameters']['labels']
-            videoCaptureDeviceId = int(2)      #if not automatically detect add id here inside bracket...,
+            videoCaptureDeviceId = int(0)      #if not automatically detect add id here inside bracket...,
             camera = cv2.VideoCapture(videoCaptureDeviceId)
             ret = camera.read()[0]
             if ret:
