@@ -67,7 +67,8 @@ def vision():
                 runner.stop()
          
 def dronekit():
-    print("listc=",listc)
+    for i in range(50):
+         print("listc=",listc)
 if __name__ == "__main__":
 # creating multiple processes
  proc1 = multiprocessing.Process(target=vision())
