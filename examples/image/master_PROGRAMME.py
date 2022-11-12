@@ -36,7 +36,6 @@ def vision():
                 backendName = camera.getBackendName()
                 w = camera.get(3)
                 h = camera.get(4)
-                print("Camera %s (%s x %s) in port %s selected." %(backendName,h,w, videoCaptureDeviceId))
                 camera.release()
             else:
                 raise Exception("Couldn't initialize selected camera.")
