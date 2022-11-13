@@ -10,7 +10,6 @@ from turtle import goto
 from dronekit import connect, VehicleMode, LocationGlobalRelative,LocationGlobal,Command
 from pymavlink import mavutil
 import math
-from classifyimage import eye
 import numpy as np     
 import argparse
 from functions import geta,getb,getc
@@ -55,10 +54,55 @@ def arm_and_takeoff(aTargetAltitude):
             print("Reached target altitude")
             break
         time.sleep(1)
+def condition_yaw(heading,is_relative=True):
+    msg = vehicle.message_factory.command_long_encode(
+            0,0,
+            mavutil.mavlink.MAV_CMD_CONDITION_YAW,
+            0,
+            heading,
+            0,
+            -1,
+            is_relative,
+            0,0,0)
+    vehicle.send_mavlink(msg)
+def send_body_ned_velocity1(velocity_x, velocity_y, velocity_z, duration=0):
+    msg = vehicle.message_factory.set_position_target_local_ned_encode(
+        0,       # time_boot_ms (not used)
+        0, 0,    # target system, target component
+        mavutil.mavlink.MAV_FRAME_BODY_NED, # frame Needs to be MAV_FRAME_BODY_NED for forward/back left/right control.
+        0b0000111111000111, # type_mask
+        0, 0, 0, # x, y, z positions (not used)
+        velocity_x, velocity_y, velocity_z, # m/s
+        0, 0, 0, # x, y, z acceleration
+        0, 0)
+    for x in range(0,duration):
+         b=getb()
+         if b>230:
+            break
+         else:     
+          vehicle.send_mavlink(msg)
+          time.sleep(1)    
 def mission():
     arm_and_takeoff(4)
     time.sleep(4)
-    c=getc()
-    if c==1:
+    while 1:
+     c=getc()
+     if c==1:
         print("detected")
-        vehicle.mode=VehicleMode("RTL")
+        print("yawing")
+        a=geta()
+        b=getb()
+        d=math.sqrt((a-320)*(a-320)+(b-240)*(b-240)) 
+        if a<320 and b<240:
+               theta=math.degrees(math.asin((320-a)/d))
+        elif a>320 and b<240:
+               theta=360-math.degrees(math.asin((a-320)/d))
+        elif a<320 and b>240:
+               theta=90+math.degrees(math.asin((b-240)/d))
+        elif a>320 and b>240:
+               theta=180+math.degrees(math.asin((a-320)/d))
+        condition_yaw(theta,True)    
+        time.sleep(2)
+        send_body_ned_velocity1(0.5,0,0,1500)
+        print("reached destination")
+mission()
