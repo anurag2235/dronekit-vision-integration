@@ -13,8 +13,3 @@ def getb():
     last_line3 = file.readlines()[-1]
     b=int(last_line3)   
     return b   
-while 1:      
- a=geta()
- b=getb()
- c=getc()
- print(a,b,c)
